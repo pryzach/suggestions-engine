@@ -29,8 +29,10 @@ Download **suggestions-proof-of-concept-0.1.0*.jar**s from GitHub Releases tab o
 ```Java
 SuggestionService suggestionService = SuggestionFactory.getSuggestionService();
 
-suggestionService.addWord(new Word("success", 10));
+// new Word(name, popularityIndex). Popularity index defines how close to the head value would be returned
+suggestionService.addWord(new Word("success", 5));
 
+// suggest(selector, limit). Limit defines maximum amount of returned matches
 String[] suggestedWordsArray = suggestionService.suggest("succes", 10);
 String[] suggestedNextLettersArray = suggestionService.suggestNextLetter("succes", suggestedWordsArray);
 
@@ -41,8 +43,10 @@ Assert.assertArrayEquals(suggestedNextLettersArray, new String[]{"s"});
 ```Java
 SuggestionService suggestionService = SuggestionFactory.getSuggestionService();
 
-suggestionService.addWord(new Word("success", 10));
+// new Word(name, popularityIndex). Popularity index defines how close to the head value would be returned
+suggestionService.addWord(new Word("success", 5));
 
+// suggest(selector, separator, limit). Limit defines maximum amount of returned matches
 String suggestedWordsString = suggestionService.suggest("succes", "|", 10);
 String suggestedNextLettersString = suggestionService.suggestNextLetter("succes", suggestedWordsString, "|");
 
