@@ -31,5 +31,8 @@ public class SuggestionConstants {
      */
     public static int CACHE_STRING_LENGTH_LIMIT = 0;
 
+    /**
+     * Helper empty array used in {@link java.util.Set#toArray(Object[])}
+     */
     public static String[] TO_STRING_ARRAY_HELPER = new String[] {};
 }
