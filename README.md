@@ -6,7 +6,8 @@ Very simplistic proof of concept implementation of highly performant suggestions
 
 ## Performance
 
-AMD mobile CPU core (2.45Ghz). 
+AMD mobile CPU core (2.45Ghz).
+
 *Tests were executed in IDEA. Since, for intergation tests, words are randomly generated - performance numbers have tendency to vary significantly (up to 300k-400k words matched per second).*
 
 ```
