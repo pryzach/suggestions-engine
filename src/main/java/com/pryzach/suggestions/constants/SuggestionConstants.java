@@ -30,4 +30,6 @@ public class SuggestionConstants {
      * Limit, in bytes, on how long cache string can be
      */
     public static int CACHE_STRING_LENGTH_LIMIT = 0;
+
+    public static String[] TO_STRING_ARRAY_HELPER = new String[] {};
 }

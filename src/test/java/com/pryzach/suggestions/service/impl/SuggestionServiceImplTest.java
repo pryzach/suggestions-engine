@@ -31,101 +31,173 @@ public class SuggestionServiceImplTest extends TestCase {
 
     public void testAddWords() throws Exception {
         SuggestionService suggestionService = SuggestionFactory.getSuggestionService();
-        Map<String, String> result;
+
+        String[] suggestedWordsArray;
+        String suggestedWordsString;
+        String[] suggestedNextLettersArray;
+        String suggestedNextLettersString;
 
         // two success words is deliberate
         suggestionService.addWords(new HashSet<>(Arrays.asList(new Word("success", 10), new Word("success", 10), new Word("succubus-long_one here", 9), new Word("success-very-unpopular", 1))));
 
-        result = suggestionService.suggest("succ", "|", 2);
+        suggestedWordsString = suggestionService.suggest("succ", "|", 2);
+        suggestedNextLettersString = suggestionService.suggestNextLetter("succ", suggestedWordsString, "|");
+        Assert.assertEquals("success|succubus-long_one here", suggestedWordsString);
+        Assert.assertEquals("e|u", suggestedNextLettersString);
 
-        Assert.assertEquals("success|succubus-long_one here|", result.get("suggestions"));
-        Assert.assertEquals("e|u|", result.get("nextLetters"));
+        suggestedWordsArray = suggestionService.suggest("succ", 2);
+        suggestedNextLettersArray = suggestionService.suggestNextLetter("succ", suggestedWordsArray);
+        Assert.assertArrayEquals(suggestedWordsArray, new String[]{"success", "succubus-long_one here"});
+        Assert.assertArrayEquals(suggestedNextLettersArray, new String[]{"e", "u"});
     }
 
     public void testSuggestEngine() throws Exception {
         SuggestionService suggestionService = SuggestionFactory.getSuggestionService();
-        Map<String, String> result;
+        String[] suggestedWordsArray;
+        String suggestedWordsString;
+        String[] suggestedNextLettersArray;
+        String suggestedNextLettersString;
 
-        result = suggestionService.suggest("succes", "|", 10);
+        suggestedWordsString = suggestionService.suggest("succes", "|", 10);
+        suggestedNextLettersString = suggestionService.suggestNextLetter("succes", suggestedWordsString, "|");
+        Assert.assertEquals("", suggestedWordsString);
+        Assert.assertEquals("", suggestedNextLettersString);
 
-        Assert.assertEquals("", result.get("suggestions"));
-        Assert.assertEquals("", result.get("nextLetters"));
+        suggestedWordsArray = suggestionService.suggest("succes", 10);
+        suggestedNextLettersArray = suggestionService.suggestNextLetter("succes", suggestedWordsArray);
+        Assert.assertEquals(0, suggestedWordsArray.length);
+        Assert.assertEquals(0, suggestedNextLettersArray.length);
 
         suggestionService.addWord(new Word("success", 10));
 
-        result = suggestionService.suggest("succes", "|", 10);
+        suggestedWordsString = suggestionService.suggest("succes", "|", 10);
+        suggestedNextLettersString = suggestionService.suggestNextLetter("succes", suggestedWordsString, "|");
+        Assert.assertEquals("success", suggestedWordsString);
+        Assert.assertEquals("s", suggestedNextLettersString);
 
-        Assert.assertEquals("success|", result.get("suggestions"));
-        Assert.assertEquals("s|", result.get("nextLetters"));
+        suggestedWordsArray = suggestionService.suggest("succes", 10);
+        suggestedNextLettersArray = suggestionService.suggestNextLetter("succes", suggestedWordsArray);
+        Assert.assertArrayEquals(suggestedWordsArray, new String[]{"success"});
+        Assert.assertArrayEquals(suggestedNextLettersArray, new String[]{"s"});
 
         suggestionService.addWord(new Word("confusuccess", 10));
 
-        result = suggestionService.suggest("succ", "|", 10);
+        suggestedWordsString = suggestionService.suggest("succ", "|", 10);
+        suggestedNextLettersString = suggestionService.suggestNextLetter("succ", suggestedWordsString, "|");
+        Assert.assertEquals("success", suggestedWordsString);
+        Assert.assertEquals("e", suggestedNextLettersString);
 
-        Assert.assertEquals("success|", result.get("suggestions"));
-        Assert.assertEquals("e|", result.get("nextLetters"));
+        suggestedWordsArray = suggestionService.suggest("succ", 10);
+        suggestedNextLettersArray = suggestionService.suggestNextLetter("succ", suggestedWordsArray);
+        Assert.assertArrayEquals(suggestedWordsArray, new String[]{"success"});
+        Assert.assertArrayEquals(suggestedNextLettersArray, new String[]{"e"});
 
         suggestionService.addWord(new Word("succubus-long_one here", 1));
 
-        result = suggestionService.suggest("succ", "|", 10);
+        suggestedWordsString = suggestionService.suggest("succ", "|", 10);
+        suggestedNextLettersString = suggestionService.suggestNextLetter("succ", suggestedWordsString, "|");
+        Assert.assertEquals("success|succubus-long_one here", suggestedWordsString);
+        Assert.assertEquals("e|u", suggestedNextLettersString);
 
-        Assert.assertEquals("success|succubus-long_one here|", result.get("suggestions"));
-        Assert.assertEquals("e|u|", result.get("nextLetters"));
+        suggestedWordsArray = suggestionService.suggest("succ", 10);
+        suggestedNextLettersArray = suggestionService.suggestNextLetter("succ", suggestedWordsArray);
+        Assert.assertArrayEquals(suggestedWordsArray, new String[]{"success", "succubus-long_one here"});
+        Assert.assertArrayEquals(suggestedNextLettersArray, new String[]{"e", "u"});
 
         suggestionService.addWord(new Word("sucks-if-this-will-appear-in-results", 10));
 
-        result = suggestionService.suggest("succ", "|", 10);
+        suggestedWordsString = suggestionService.suggest("succ", "|", 10);
+        suggestedNextLettersString = suggestionService.suggestNextLetter("succ", suggestedWordsString, "|");
+        Assert.assertEquals("success|succubus-long_one here", suggestedWordsString);
+        Assert.assertEquals("e|u", suggestedNextLettersString);
 
-        Assert.assertEquals("success|succubus-long_one here|", result.get("suggestions"));
-        Assert.assertEquals("e|u|", result.get("nextLetters"));
+        suggestedWordsArray = suggestionService.suggest("succ", 10);
+        suggestedNextLettersArray = suggestionService.suggestNextLetter("succ", suggestedWordsArray);
+        Assert.assertArrayEquals(suggestedWordsArray, new String[]{"success", "succubus-long_one here"});
+        Assert.assertArrayEquals(suggestedNextLettersArray, new String[]{"e", "u"});
 
         suggestionService.addWord(new Word("success-very-popular", 100));
 
-        result = suggestionService.suggest("succ", "|", 10);
+        suggestedWordsString = suggestionService.suggest("succ", "|", 10);
+        suggestedNextLettersString = suggestionService.suggestNextLetter("succ", suggestedWordsString, "|");
+        Assert.assertEquals("success-very-popular|success|succubus-long_one here", suggestedWordsString);
+        Assert.assertEquals("e|u", suggestedNextLettersString);
 
-        Assert.assertEquals("success-very-popular|success|succubus-long_one here|", result.get("suggestions"));
-        Assert.assertEquals("e|u|", result.get("nextLetters"));
+        suggestedWordsArray = suggestionService.suggest("succ", 10);
+        suggestedNextLettersArray = suggestionService.suggestNextLetter("succ", suggestedWordsArray);
+        Assert.assertArrayEquals(suggestedWordsArray, new String[]{"success-very-popular", "success", "succubus-long_one here"});
+        Assert.assertArrayEquals(suggestedNextLettersArray, new String[]{"e", "u"});
 
-        result = suggestionService.suggest("succ", "|", 2);
+        suggestedWordsString = suggestionService.suggest("succ", "|", 2);
+        suggestedNextLettersString = suggestionService.suggestNextLetter("succ", suggestedWordsString, "|");
+        Assert.assertEquals("success-very-popular|success", suggestedWordsString);
+        Assert.assertEquals("e", suggestedNextLettersString);
 
-        Assert.assertEquals("success-very-popular|success|", result.get("suggestions"));
-        Assert.assertEquals("e|", result.get("nextLetters"));
+        suggestedWordsArray = suggestionService.suggest("succ", 2);
+        suggestedNextLettersArray = suggestionService.suggestNextLetter("succ", suggestedWordsArray);
+        Assert.assertArrayEquals(suggestedWordsArray, new String[]{"success-very-popular", "success"});
+        Assert.assertArrayEquals(suggestedNextLettersArray, new String[]{"e"});
 
         // starting to test selectors which exceed caching max length
-        result = suggestionService.suggest("success-very-", "|", 2);
+        suggestedWordsString = suggestionService.suggest("success-very-", "|", 2);
+        suggestedNextLettersString = suggestionService.suggestNextLetter("success-very-", suggestedWordsString, "|");
+        Assert.assertEquals("success-very-popular", suggestedWordsString);
+        Assert.assertEquals("p", suggestedNextLettersString);
 
-        Assert.assertEquals("success-very-popular|", result.get("suggestions"));
-        Assert.assertEquals("p|", result.get("nextLetters"));
+        suggestedWordsArray = suggestionService.suggest("success-very-", 2);
+        suggestedNextLettersArray = suggestionService.suggestNextLetter("success-very-", suggestedWordsArray);
+        Assert.assertArrayEquals(suggestedWordsArray, new String[]{"success-very-popular"});
+        Assert.assertArrayEquals(suggestedNextLettersArray, new String[]{"p"});
 
         suggestionService.addWord(new Word("success-very-long", 101));
 
-        result = suggestionService.suggest("success-very-", "|", 2);
+        suggestedWordsString = suggestionService.suggest("success-very-", "|", 2);
+        suggestedNextLettersString = suggestionService.suggestNextLetter("success-very-", suggestedWordsString, "|");
+        Assert.assertEquals("success-very-long|success-very-popular", suggestedWordsString);
+        Assert.assertEquals("l|p", suggestedNextLettersString);
 
-        Assert.assertEquals("success-very-long|success-very-popular|", result.get("suggestions"));
-        Assert.assertEquals("l|p|", result.get("nextLetters"));
+        suggestedWordsArray = suggestionService.suggest("success-very-", 2);
+        suggestedNextLettersArray = suggestionService.suggestNextLetter("success-very-", suggestedWordsArray);
+        Assert.assertArrayEquals(suggestedWordsArray, new String[]{"success-very-long", "success-very-popular"});
+        Assert.assertArrayEquals(suggestedNextLettersArray, new String[]{"l", "p"});
 
         suggestionService.addWord(new Word("success-very-boring", 1));
 
-        result = suggestionService.suggest("success-very-", "|", 2);
+        suggestedWordsString = suggestionService.suggest("success-very-", "|", 2);
+        suggestedNextLettersString = suggestionService.suggestNextLetter("success-very-", suggestedWordsString, "|");
+        Assert.assertEquals("success-very-long|success-very-popular", suggestedWordsString);
+        Assert.assertEquals("l|p", suggestedNextLettersString);
 
-        Assert.assertEquals("success-very-long|success-very-popular|", result.get("suggestions"));
-        Assert.assertEquals("l|p|", result.get("nextLetters"));
+        suggestedWordsArray = suggestionService.suggest("success-very-", 2);
+        suggestedNextLettersArray = suggestionService.suggestNextLetter("success-very-", suggestedWordsArray);
+        Assert.assertArrayEquals(suggestedWordsArray, new String[]{"success-very-long", "success-very-popular"});
+        Assert.assertArrayEquals(suggestedNextLettersArray, new String[]{"l", "p"});
 
         // confirmation that white spaces are supported
         suggestionService.addWord(new Word("success with whitespaces", 1));
 
-        result = suggestionService.suggest("success", "|", 4);
+        suggestedWordsString = suggestionService.suggest("success", "|", 4);
+        suggestedNextLettersString = suggestionService.suggestNextLetter("success", suggestedWordsString, "|");
+        Assert.assertEquals("success-very-long|success-very-popular|success-very-boring|success with whitespaces", suggestedWordsString);
+        Assert.assertEquals("-| ", suggestedNextLettersString);
 
-        Assert.assertEquals("success-very-long|success-very-popular|success-very-boring|success with whitespaces|", result.get("suggestions"));
-        Assert.assertEquals("-| |", result.get("nextLetters"));
+        suggestedWordsArray = suggestionService.suggest("success", 4);
+        suggestedNextLettersArray = suggestionService.suggestNextLetter("success", suggestedWordsArray);
+        Assert.assertArrayEquals(suggestedWordsArray, new String[]{"success-very-long", "success-very-popular", "success-very-boring", "success with whitespaces"});
+        Assert.assertArrayEquals(suggestedNextLettersArray, new String[]{"-", " "});
 
         // confirmation that implementation is case insensitive
         suggestionService.addWord(new Word("SucCEss_with-different case", 2));
 
-        result = suggestionService.suggest("success", "|", 5);
+        suggestedWordsString = suggestionService.suggest("success", "|", 5);
+        suggestedNextLettersString = suggestionService.suggestNextLetter("success", suggestedWordsString, "|");
+        Assert.assertEquals("success-very-long|success-very-popular|SucCEss_with-different case|success-very-boring|success with whitespaces", suggestedWordsString);
+        Assert.assertEquals("-|_| ", suggestedNextLettersString);
 
-        Assert.assertEquals("success-very-long|success-very-popular|SucCEss_with-different case|success-very-boring|success with whitespaces|", result.get("suggestions"));
-        Assert.assertEquals("-|_| |", result.get("nextLetters"));
+        suggestedWordsArray = suggestionService.suggest("success", 5);
+        suggestedNextLettersArray = suggestionService.suggestNextLetter("success", suggestedWordsArray);
+        Assert.assertArrayEquals(suggestedWordsArray, new String[]{"success-very-long", "success-very-popular", "SucCEss_with-different case", "success-very-boring", "success with whitespaces"});
+        Assert.assertArrayEquals(suggestedNextLettersArray, new String[]{"-", "_", " "});
     }
 
     public void testSuggestEnginePerformanceAndReliabilityFullOxfordTest() {
@@ -143,7 +215,8 @@ public class SuggestionServiceImplTest extends TestCase {
 
     private void performanceTest(long amount) {
         SuggestionService suggestionService = SuggestionFactory.getSuggestionService();
-        Map<String, String> result;
+        String[] suggestedWordsArray;
+        String[] suggestedNextLettersArray;
 
         List<String> selectors = new ArrayList<>();
 
@@ -164,7 +237,8 @@ public class SuggestionServiceImplTest extends TestCase {
             }
         }
 
-        suggestionService.addWords(words);words.clear();
+        suggestionService.addWords(words);
+        words.clear();
 
         System.out.println("Added to service [" + amount + "] and took [" + (new Date().getTime() - startTime) + " ms]");
 
@@ -172,17 +246,16 @@ public class SuggestionServiceImplTest extends TestCase {
         startTime = new Date().getTime();
         for (String selector : selectors) {
 
-            result = suggestionService.suggest(selector, "|", 10);
+            suggestedWordsArray = suggestionService.suggest(selector, 10);
 
             // uncomment below to visually confirm matches
             // if (i % 1000 == 0) System.out.println("Matched [" + selector + "] to [" + result.get("suggestions") + "]");
 
-            Assert.assertTrue(result.get("suggestions").length() > 1);
-            Assert.assertTrue(result.get("nextLetters").length() > 1);
+            Assert.assertTrue(suggestedWordsArray.length >= 1);
             i++;
         }
 
-        System.out.println("Matched: [" + selectors.size() + "] and took [" + (new Date().getTime() - startTime) + " ms] [" + new BigDecimal(((double) new Date().getTime() - startTime)/selectors.size()).setScale(5, BigDecimal.ROUND_HALF_UP).toString() + " ms] per match and [" + Math.round(1000 / (((double) new Date().getTime() - startTime)/selectors.size())) + " words] per second");
+        System.out.println("Matched: [" + selectors.size() + "] and took [" + (new Date().getTime() - startTime) + " ms] [" + new BigDecimal(((double) new Date().getTime() - startTime) / selectors.size()).setScale(5, BigDecimal.ROUND_HALF_UP).toString() + " ms] per match and [" + Math.round(1000 / (((double) new Date().getTime() - startTime) / selectors.size())) + " words] per second");
     }
 
     private int randomInt(int start, int end) {

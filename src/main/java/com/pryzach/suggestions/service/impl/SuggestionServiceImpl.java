@@ -123,15 +123,13 @@ public class SuggestionServiceImpl implements SuggestionService {
     /**
      * {@inheritDoc}
      */
-    @Override
-    public Map<String, String> suggest(String selector, String separator, int limit) {
-        Map<String, String> result = new HashMap<>();
+    public String[] suggest(String selector, int limit) {
+        //Map<String, String[]> result = new HashMap<>();
 
-        StringBuilder suggestions = new StringBuilder();
-        StringBuilder nextLetters = new StringBuilder();
+        Set<String> suggestions = new LinkedHashSet<>();
+        //Set<String> nextLetters = new LinkedHashSet<>();
 
         if (selector.length() >= this.minLength) {
-            String nextLetter;
 
             if (selector.length() > this.maxCachingLength) {
                 String cacheKeyPartial = selector.substring(0, this.maxCachingLength);
@@ -144,12 +142,8 @@ public class SuggestionServiceImpl implements SuggestionService {
                     for (int i = 0; matcher.find() && i < limit; i++) {
                         matchedWord = matcher.group();
 
-                        suggestions.append(matchedWord).append(separator);
+                        suggestions.add(matchedWord);
 
-                        nextLetter = matchedWord.substring(selector.length(), selector.length() + 1);
-                        if (nextLetters.indexOf(nextLetter + separator) == -1) {
-                            nextLetters.append(nextLetter).append(separator);
-                        }
                     }
                 }
             } else {
@@ -163,14 +157,7 @@ public class SuggestionServiceImpl implements SuggestionService {
                             break;
                         }
 
-                        suggestions.append(cacheWord.getName()).append(separator);
-
-                        if (cacheWord.getName().length() > selector.length()) {
-                            nextLetter = cacheWord.getName().substring(selector.length(), selector.length() + 1);
-                            if (nextLetters.indexOf(nextLetter + separator) == -1) {
-                                nextLetters.append(nextLetter).append(separator);
-                            }
-                        }
+                        suggestions.add(cacheWord.getName());
 
                         i++;
                     }
@@ -179,9 +166,42 @@ public class SuggestionServiceImpl implements SuggestionService {
 
         }
 
-        result.put("suggestions", suggestions.toString());
-        result.put("nextLetters", nextLetters.toString());
-
-        return result;
+        return suggestions.toArray(SuggestionConstants.TO_STRING_ARRAY_HELPER);
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String suggest(String selector, String separator, int limit) {
+        return String.join(separator, this.suggest(selector, limit));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String[] suggestNextLetter(String selector, String[] suggestedWords) {
+        Set<String> suggestNextLetters = new LinkedHashSet<>();
+        int nextLetterPosition = selector.length();
+
+        String nextLetter;
+        for (int i = 0; i < suggestedWords.length; i++) {
+            if (suggestedWords[i].length() > nextLetterPosition) {
+                suggestNextLetters.add(Character.toString(suggestedWords[i].charAt(nextLetterPosition)));
+            }
+
+        }
+
+        return suggestNextLetters.toArray(SuggestionConstants.TO_STRING_ARRAY_HELPER);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String suggestNextLetter(String selector, String suggestedWords, String separator) {
+        return String.join(separator, this.suggestNextLetter(selector, suggestedWords.split("[" + separator + "]")));
+    }
+
 }

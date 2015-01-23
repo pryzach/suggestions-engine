@@ -41,13 +41,41 @@ public interface SuggestionService {
 
     /**
      * Suggests words, returns:
-     *  {suggestions: "word&lt;separator&gt;word&lt;separator&gt;", nextLetters: "letter&lt;separator&gt;letter&lt;separator&gt;"}
+     *  "word&lt;separator&gt;word&lt;separator&gt;"
      *
      * @param selector word to which we suggest match
      * @param separator separator for serialization/de-serialization purposes
      * @param limit limit to how much matches to send back
-     * @return map with two strings - one with word suggestions and second string is next letter suggestions, items in both strings are separated by separator
+     * @return string, separated by separator specified as a parameter, with words suggestions
      */
-    public Map<String, String> suggest(String selector, String separator, int limit);
+    public String suggest(String selector, String separator, int limit);
 
+    /**
+     * Suggests words, returns:
+     *  [word, word]
+     *
+     * @param selector word to which we suggest match
+     * @param limit limit to how much matches to send back
+     * @return array with words suggestions
+     */
+    public String[] suggest(String selector, int limit);
+
+    /**
+     * Suggests next letters, returns: "letter&lt;separator&gt;letter&lt;separator&gt;"
+     *
+     * @param selector word to which we suggest match
+     * @param suggestedWords string, separated by separator, with words suggestions
+     * @param separator separator for serialization/de-serialization purposes
+     * @return string of next letter suggestions separated by separator
+     */
+    public String suggestNextLetter(String selector, String suggestedWords, String separator);
+
+    /**
+     * Suggests words, returns: [letter, letter]]
+     *
+     * @param selector word to which we suggest match
+     * @param suggestedWords array with words suggestions
+     * @return array of next letter suggestions
+     */
+    public String[] suggestNextLetter(String selector, String[] suggestedWords);
 }

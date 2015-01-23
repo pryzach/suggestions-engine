@@ -26,6 +26,30 @@ Matched: [29239] and took [220 ms] [0.00752 ms] per match and [132905 words] per
 
 Download **suggestions-proof-of-concept-0.1.0*.jar**s from GitHub Releases tab or clone git repository and invoke "mvn package" on master
 
+```Java
+SuggestionService suggestionService = SuggestionFactory.getSuggestionService();
+
+suggestionService.addWord(new Word("success", 10));
+
+String[] suggestedWordsArray = suggestionService.suggest("succes", 10);
+String[] suggestedNextLettersArray = suggestionService.suggestNextLetter("succes", suggestedWordsArray);
+
+Assert.assertArrayEquals(suggestedWordsArray, new String[]{"success"});
+Assert.assertArrayEquals(suggestedNextLettersArray, new String[]{"s"});
+```
+	
+```Java
+SuggestionService suggestionService = SuggestionFactory.getSuggestionService();
+
+suggestionService.addWord(new Word("success", 10));
+
+String suggestedWordsString = suggestionService.suggest("succes", "|", 10);
+String suggestedNextLettersString = suggestionService.suggestNextLetter("succes", suggestedWordsString, "|");
+
+Assert.assertEquals("success", suggestedWordsString);
+Assert.assertEquals("s", suggestedNextLettersString);
+```
+
 ## Contribute
 
 If you would like to help with development - fork, contact me via [pryzach@gmail.com] (mailto:pryzach@gmail.com) or post a question using [GitHub Issue Tracker] (https://github.com/pryzach/midao/issues).
