@@ -74,7 +74,7 @@ suggestionService.addWord(new Word("", 10));
 
 ## Contribute
 
-If you would like to help with development - fork, contact me via [pryzach@gmail.com] (mailto:pryzach@gmail.com) or post a question using [GitHub Issue Tracker] (https://github.com/pryzach/midao/issues).
+If you would like to help with development - fork, contact me via [pryzach@gmail.com] (mailto:pryzach@gmail.com) or post a question using [GitHub Issue Tracker] (https://github.com/pryzach/suggestions-engine/issues).
 
 ## License
 
