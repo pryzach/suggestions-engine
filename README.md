@@ -2,7 +2,7 @@
 
 ## About
 
-Quite simple implementation of highly performant suggestions engine with support of any LTR and RTL languages.
+Quite simple implementation of highly performant suggestions engine with support of LTR and RTL languages.
 
 ## Performance
 
