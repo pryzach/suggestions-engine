@@ -1,8 +1,8 @@
-# [Suggestions Engine]
+﻿# [Suggestions Engine]
 
 ## About
 
-Very simplistic proof of concept implementation of highly performant suggestions engine
+Quite simple implementation of highly performant suggestions engine with support of any LTR and RTL languages.
 
 ## Performance
 
@@ -52,6 +52,24 @@ String suggestedNextLettersString = suggestionService.suggestNextLetter("succes"
 
 Assert.assertEquals("success", suggestedWordsString);
 Assert.assertEquals("s", suggestedNextLettersString);
+```
+
+```Java
+SuggestionService suggestionService = SuggestionFactory.getSuggestionService();
+
+// international support examples
+
+// spanish
+suggestionService.addWord(new Word("éxito", 10));
+... suggestionService.suggest("éxi", "|", 10);
+
+// russian
+suggestionService.addWord(new Word("успех", 10));
+... suggestionService.suggest("ус", "|", 10);
+
+// jewish
+suggestionService.addWord(new Word("", 10));
+... suggestionService.suggest("", "|", 10);
 ```
 
 ## Contribute

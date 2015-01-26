@@ -18,6 +18,7 @@ package com.pryzach.suggestions.service.impl;
 
 import com.pryzach.suggestions.constants.SuggestionConstants;
 import com.pryzach.suggestions.model.Word;
+import com.pryzach.suggestions.model.WordRTL;
 import com.pryzach.suggestions.service.SuggestionService;
 
 import java.util.*;
@@ -124,10 +125,7 @@ public class SuggestionServiceImpl implements SuggestionService {
      * {@inheritDoc}
      */
     public String[] suggest(String selector, int limit) {
-        //Map<String, String[]> result = new HashMap<>();
-
         Set<String> suggestions = new LinkedHashSet<>();
-        //Set<String> nextLetters = new LinkedHashSet<>();
 
         if (selector.length() >= this.minLength) {
 
@@ -173,6 +171,41 @@ public class SuggestionServiceImpl implements SuggestionService {
      * {@inheritDoc}
      */
     @Override
+    public WordRTL[] suggest(WordRTL selector, int limit) {
+        String[] suggestedWordsStringArray = this.suggest(selector.getName(), limit);
+        WordRTL[] suggestedWordsArray = new WordRTL[suggestedWordsStringArray.length];
+
+        for (int i = 0; i < suggestedWordsStringArray.length; i++) {
+            suggestedWordsArray[i] = new WordRTL(suggestedWordsStringArray[i], suggestedWordsStringArray.length - i);
+        }
+
+        return suggestedWordsArray;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String suggest(WordRTL selector, String separator, int limit) {
+        WordRTL[] suggestedWordsArray = this.suggest(selector, limit);
+
+        StringBuilder suggestedWordsString = new StringBuilder("");
+
+        for (int i = 0; i < suggestedWordsArray.length; i++) {
+            suggestedWordsString.append(suggestedWordsArray[i].getName());
+
+            if (i + 1 < suggestedWordsArray.length) {
+                suggestedWordsString.append(separator);
+            }
+        }
+
+        return suggestedWordsString.toString();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public String suggest(String selector, String separator, int limit) {
         return String.join(separator, this.suggest(selector, limit));
     }
@@ -182,18 +215,18 @@ public class SuggestionServiceImpl implements SuggestionService {
      */
     @Override
     public String[] suggestNextLetter(String selector, String[] suggestedWords) {
-        Set<String> suggestNextLetters = new LinkedHashSet<>();
+        Set<String> suggestedNextLetters = new LinkedHashSet<>();
         int nextLetterPosition = selector.length();
 
         String nextLetter;
         for (int i = 0; i < suggestedWords.length; i++) {
             if (suggestedWords[i].length() > nextLetterPosition) {
-                suggestNextLetters.add(Character.toString(suggestedWords[i].charAt(nextLetterPosition)));
+                suggestedNextLetters.add(Character.toString(suggestedWords[i].charAt(nextLetterPosition)));
             }
 
         }
 
-        return suggestNextLetters.toArray(SuggestionConstants.TO_STRING_ARRAY_HELPER);
+        return suggestedNextLetters.toArray(SuggestionConstants.TO_STRING_ARRAY_HELPER);
     }
 
     /**

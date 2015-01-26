@@ -17,6 +17,7 @@
 package com.pryzach.suggestions.service;
 
 import com.pryzach.suggestions.model.Word;
+import com.pryzach.suggestions.model.WordRTL;
 
 import java.util.Collection;
 import java.util.Map;
@@ -59,6 +60,31 @@ public interface SuggestionService {
      * @return array with words suggestions
      */
     public String[] suggest(String selector, int limit);
+
+    /**
+     * Suggests words, returns:
+     *  [word, word]
+     *
+     * Supports RTL languages
+     *
+     * @param selector word to which we suggest match
+     * @param limit limit to how much matches to send back
+     * @return array with words suggestions
+     */
+    public WordRTL[] suggest(WordRTL selector, int limit);
+
+    /**
+     * Suggests words, returns:
+     *  [word, word]
+     *
+     * Supports RTL languages
+     *
+     * @param selector word to which we suggest match
+     * @param separator separator for serialization/de-serialization purposes
+     * @param limit limit to how much matches to send back
+     * @return string, separated by separator specified as a parameter, with words suggestions
+     */
+    public String suggest(WordRTL selector, String separator, int limit);
 
     /**
      * Suggests next letters, returns: "letter&lt;separator&gt;letter&lt;separator&gt;"

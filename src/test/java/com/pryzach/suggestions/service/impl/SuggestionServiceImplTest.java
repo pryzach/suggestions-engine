@@ -18,6 +18,7 @@ package com.pryzach.suggestions.service.impl;
 
 import com.pryzach.suggestions.SuggestionFactory;
 import com.pryzach.suggestions.model.Word;
+import com.pryzach.suggestions.model.WordRTL;
 import com.pryzach.suggestions.service.SuggestionService;
 import junit.framework.TestCase;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -198,6 +199,109 @@ public class SuggestionServiceImplTest extends TestCase {
         suggestedNextLettersArray = suggestionService.suggestNextLetter("success", suggestedWordsArray);
         Assert.assertArrayEquals(suggestedWordsArray, new String[]{"success-very-long", "success-very-popular", "SucCEss_with-different case", "success-very-boring", "success with whitespaces"});
         Assert.assertArrayEquals(suggestedNextLettersArray, new String[]{"-", "_", " "});
+    }
+
+    public void testInternationalSupport() {
+        SuggestionService suggestionService = SuggestionFactory.getSuggestionService();
+        String[] suggestedWordsArray;
+        String suggestedWordsString;
+        String[] suggestedNextLettersArray;
+        String suggestedNextLettersString;
+
+        // spanish
+        suggestionService.addWord(new Word("éxito", 10));
+
+        suggestedWordsString = suggestionService.suggest("éxi", "|", 10);
+        suggestedNextLettersString = suggestionService.suggestNextLetter("éxi", suggestedWordsString, "|");
+        Assert.assertEquals("éxito", suggestedWordsString);
+        Assert.assertEquals("t", suggestedNextLettersString);
+
+        suggestedWordsArray = suggestionService.suggest("éxi", 10);
+        suggestedNextLettersArray = suggestionService.suggestNextLetter("éxi", suggestedWordsArray);
+        Assert.assertArrayEquals(suggestedWordsArray, new String[]{"éxito"});
+        Assert.assertArrayEquals(suggestedNextLettersArray, new String[]{"t"});
+
+        // german
+        suggestionService.addWord(new Word("großmutter", 10));
+
+        suggestedWordsString = suggestionService.suggest("gro", "|", 10);
+        suggestedNextLettersString = suggestionService.suggestNextLetter("gro", suggestedWordsString, "|");
+        Assert.assertEquals("großmutter", suggestedWordsString);
+        Assert.assertEquals("ß", suggestedNextLettersString);
+
+        suggestedWordsArray = suggestionService.suggest("gro", 10);
+        suggestedNextLettersArray = suggestionService.suggestNextLetter("gro", suggestedWordsArray);
+        Assert.assertArrayEquals(suggestedWordsArray, new String[]{"großmutter"});
+        Assert.assertArrayEquals(suggestedNextLettersArray, new String[]{"ß"});
+
+        // swedish
+        suggestionService.addWord(new Word("framgång", 10));
+
+        suggestedWordsString = suggestionService.suggest("fra", "|", 10);
+        suggestedNextLettersString = suggestionService.suggestNextLetter("fra", suggestedWordsString, "|");
+        Assert.assertEquals("framgång", suggestedWordsString);
+        Assert.assertEquals("m", suggestedNextLettersString);
+
+        suggestedWordsArray = suggestionService.suggest("fra", 10);
+        suggestedNextLettersArray = suggestionService.suggestNextLetter("fra", suggestedWordsArray);
+        Assert.assertArrayEquals(suggestedWordsArray, new String[]{"framgång"});
+        Assert.assertArrayEquals(suggestedNextLettersArray, new String[]{"m"});
+
+        // russian (cyrillic)
+        suggestionService.addWord(new Word("успех", 10));
+
+        suggestedWordsString = suggestionService.suggest("ус", "|", 10);
+        suggestedNextLettersString = suggestionService.suggestNextLetter("ус", suggestedWordsString, "|");
+        Assert.assertEquals("успех", suggestedWordsString);
+        Assert.assertEquals("п", suggestedNextLettersString);
+
+        suggestedWordsArray = suggestionService.suggest("ус", 10);
+        suggestedNextLettersArray = suggestionService.suggestNextLetter("ус", suggestedWordsArray);
+        Assert.assertArrayEquals(suggestedWordsArray, new String[]{"успех"});
+        Assert.assertArrayEquals(suggestedNextLettersArray, new String[]{"п"});
+
+        // turkish
+        suggestionService.addWord(new Word("başarı", 10));
+
+        suggestedWordsString = suggestionService.suggest("ba", "|", 10);
+        suggestedNextLettersString = suggestionService.suggestNextLetter("ba", suggestedWordsString, "|");
+        Assert.assertEquals("başarı", suggestedWordsString);
+        Assert.assertEquals("ş", suggestedNextLettersString);
+
+        suggestedWordsArray = suggestionService.suggest("ba", 10);
+        suggestedNextLettersArray = suggestionService.suggestNextLetter("ba", suggestedWordsArray);
+        Assert.assertArrayEquals(suggestedWordsArray, new String[]{"başarı"});
+        Assert.assertArrayEquals(suggestedNextLettersArray, new String[]{"ş"});
+
+        // experimental support of RTL languages, please contact me if you if you want to improve / extend current implementation
+        // RTL languages implementation doesn't provide "next word" functionality, but if you need it - please let me know and I will add it immediately
+
+        // arabic 1
+        suggestionService.addWord(new WordRTL("نجاح", 10));
+
+        WordRTL[] suggestedWordsRLTArray = suggestionService.suggest(new WordRTL("اح", 0), 10);
+        suggestedWordsString = suggestionService.suggest(new WordRTL("اح", 0), "|", 10);
+        Assert.assertEquals(1, suggestedWordsRLTArray.length);
+        Assert.assertArrayEquals(new String[] {suggestedWordsRLTArray[0].getName()}, new String[]{"نجاح"});
+        Assert.assertEquals(suggestedWordsString, "نجاح");
+
+        // arabic 2
+        suggestionService.addWord(new WordRTL("نجح", 11));
+
+        suggestedWordsRLTArray = suggestionService.suggest(new WordRTL("ح", 0), 10);
+        suggestedWordsString = suggestionService.suggest(new WordRTL("ح", 0), "|", 10);
+        Assert.assertEquals(2, suggestedWordsRLTArray.length);
+        Assert.assertArrayEquals(new String[] {suggestedWordsRLTArray[0].getName(), suggestedWordsRLTArray[1].getName()}, new String[]{"نجح", "نجاح"});
+        Assert.assertEquals(suggestedWordsString, "نجح" + "|" + "نجاح");
+
+        // jewish
+        suggestionService.addWord(new WordRTL("להצליח", 11));
+
+        suggestedWordsRLTArray = suggestionService.suggest(new WordRTL("ח", 0), 10);
+        suggestedWordsString = suggestionService.suggest(new WordRTL("ח", 0), "|", 10);
+        Assert.assertEquals(1, suggestedWordsRLTArray.length);
+        Assert.assertArrayEquals(new String[] {suggestedWordsRLTArray[0].getName()}, new String[]{"להצליח"});
+        Assert.assertEquals(suggestedWordsString, "להצליח");
     }
 
     public void testSuggestEnginePerformanceAndReliabilityFullOxfordTest() {
