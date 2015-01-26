@@ -71,6 +71,7 @@ suggestionService.addWord(new Word("успех", 10));
 suggestionService.addWord(
 	new WordRTL("הצלחה", 
 	10));
+// in case of RTL languages - selector should be WordRTL object
 ... suggestionService.suggest(
 	new WordRTL("ה"),
 	10);
