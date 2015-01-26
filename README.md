@@ -68,9 +68,11 @@ suggestionService.addWord(new Word("успех", 10));
 ... suggestionService.suggest("ус", 5);
 
 // jewish
-suggestionService.addWord(new WordRTL("הצלחה", 
+suggestionService.addWord(
+	new WordRTL("הצלחה", 
 	10));
-... suggestionService.suggest(new WordRTL("ה"),
+... suggestionService.suggest(
+	new WordRTL("ה"),
 	10);
 ```
 
