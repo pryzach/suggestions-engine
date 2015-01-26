@@ -279,8 +279,8 @@ public class SuggestionServiceImplTest extends TestCase {
         // arabic 1
         suggestionService.addWord(new WordRTL("نجاح", 10));
 
-        WordRTL[] suggestedWordsRLTArray = suggestionService.suggest(new WordRTL("اح", 0), 10);
-        suggestedWordsString = suggestionService.suggest(new WordRTL("اح", 0), "|", 10);
+        WordRTL[] suggestedWordsRLTArray = suggestionService.suggest(new WordRTL("اح"), 10);
+        suggestedWordsString = suggestionService.suggest(new WordRTL("اح"), "|", 10);
         Assert.assertEquals(1, suggestedWordsRLTArray.length);
         Assert.assertArrayEquals(new String[] {suggestedWordsRLTArray[0].getName()}, new String[]{"نجاح"});
         Assert.assertEquals(suggestedWordsString, "نجاح");
@@ -288,8 +288,8 @@ public class SuggestionServiceImplTest extends TestCase {
         // arabic 2
         suggestionService.addWord(new WordRTL("نجح", 11));
 
-        suggestedWordsRLTArray = suggestionService.suggest(new WordRTL("ح", 0), 10);
-        suggestedWordsString = suggestionService.suggest(new WordRTL("ح", 0), "|", 10);
+        suggestedWordsRLTArray = suggestionService.suggest(new WordRTL("ح"), 10);
+        suggestedWordsString = suggestionService.suggest(new WordRTL("ح"), "|", 10);
         Assert.assertEquals(2, suggestedWordsRLTArray.length);
         Assert.assertArrayEquals(new String[] {suggestedWordsRLTArray[0].getName(), suggestedWordsRLTArray[1].getName()}, new String[]{"نجح", "نجاح"});
         Assert.assertEquals(suggestedWordsString, "نجح" + "|" + "نجاح");
@@ -297,8 +297,8 @@ public class SuggestionServiceImplTest extends TestCase {
         // jewish
         suggestionService.addWord(new WordRTL("להצליח", 11));
 
-        suggestedWordsRLTArray = suggestionService.suggest(new WordRTL("ח", 0), 10);
-        suggestedWordsString = suggestionService.suggest(new WordRTL("ח", 0), "|", 10);
+        suggestedWordsRLTArray = suggestionService.suggest(new WordRTL("ח"), 10);
+        suggestedWordsString = suggestionService.suggest(new WordRTL("ח"), "|", 10);
         Assert.assertEquals(1, suggestedWordsRLTArray.length);
         Assert.assertArrayEquals(new String[] {suggestedWordsRLTArray[0].getName()}, new String[]{"להצליח"});
         Assert.assertEquals(suggestedWordsString, "להצליח");

@@ -28,7 +28,7 @@ public class Word implements Comparable {
     /**
      * Default constructor
      *
-     * @param name actual word
+     * @param name dictionary word
      * @param popularityIndex popularity index (influences order)
      */
     public Word(String name, int popularityIndex) {
