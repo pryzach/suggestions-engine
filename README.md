@@ -61,15 +61,17 @@ SuggestionService suggestionService = SuggestionFactory.getSuggestionService();
 
 // spanish
 suggestionService.addWord(new Word("éxito", 10));
-... suggestionService.suggest("éxi", "|", 10);
+... suggestionService.suggest("éxi", 5);
 
 // russian
 suggestionService.addWord(new Word("успех", 10));
-... suggestionService.suggest("ус", "|", 10);
+... suggestionService.suggest("ус", 5);
 
 // jewish
-suggestionService.addWord(new Word("", 10));
-... suggestionService.suggest("", "|", 10);
+suggestionService.addWord(new WordRTL("הצלחה", 
+	10));
+... suggestionService.suggest(new WordRTL("ה"),
+	10);
 ```
 
 ## Contribute
